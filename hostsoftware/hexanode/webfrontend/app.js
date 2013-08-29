@@ -6,13 +6,14 @@ var application_root = __dirname
   , server=require("http").createServer(app)
   , io = require('socket.io').listen(server)
   , Cache=require("./lib/sensorcache")
+  , Wizard=require("./lib/wizard")
   , nconf=require('nconf');
 
 nconf.env().argv();
 // Setting default values
 nconf.defaults({
   'port': '3000',
-  'server': '10.23.1.253'
+  'server': 'localhost'
 });
 
 server.listen(nconf.get('port'));
@@ -31,6 +32,7 @@ if (nconf.get('uid')) {
 }
 
 var sensorcache = new Cache();
+var wizard = new Wizard();
 console.log("Using configuration: ");
 console.log(" - server: " + nconf.get('server'));
 console.log(" - port: " + nconf.get('port'));
@@ -74,6 +76,14 @@ app.post('/api/sensor/:id', function(req, res) {
   sensorcache.add_value(req, res);
 });
 
+app.get('/status', function(req, res){
+	wizard.get_status(req, res);
+});
+
+app.get('/wizard', function(req, res){
+	wizard.show_wizard(req, res);
+});
+
 app.get('/', function(req, res) {
   console.log("Sensorlist:" + JSON.stringify(sensorcache.render_sensor_list()));
   res.render('index.ejs', 
@@ -101,6 +111,24 @@ io.sockets.on('connection', function (socket) {
     sensorcache.send_current_data(function(msg) {
       socket.volatile.emit('sensor_update', { sensor: msg });
     });
+  });
+  socket.on('check_connection', function() {
+	  wizard.is_connected(function(msg) {
+		  socket.volatile.emit('connection_update', { is_connected: msg });
+  	});
+  });
+  socket.on('get_activation', function() {
+	  wizard.get_activation(function(msg) {
+		  socket.volatile.emit('activation_update',{ activation: msg });
+  	});
+  });
+  socket.on('get_devices', function() {
+	  wizard.get_devices(function(msg) {
+		  socket.volatile.emit('device_update',{ devicelist: msg });
+  	});
+  });
+  socket.on('submit_devices', function(msg) {
+	  wizard.submit_devices(msg);
   });
 });
 

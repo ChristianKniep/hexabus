@@ -1,0 +1,67 @@
+<% include header %>
+<div class="tab-content">
+  <div class="tab-pane active" id="wizard">
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+
+              <h2 class="text-center">Status</h2>
+                  <div class="row-fluid">
+			<%if(connected){ %>
+				Connection established
+					<% } else { %>
+						No connection
+							<% } %>
+                  </div>
+                  <div class="row-fluid">
+              <h3 class="text-center">Configured ips</h2>
+                      <% for (var i in ip_addresses) {  %>
+						<%=i%>
+                        <% interface=ip_addresses[i]; %>
+							<ul>
+                      <% for (var j in interface) {  %>
+                          <li> <div id="<%=interface[j]%>"></div><%=interface[j]%></li>
+                      <% } %>
+						</ul>
+                      <% } %>
+                  </div>
+                <div class="devicelist">
+                  <div class="row-fluid">
+              <h3 class="text-center">Devices</h2>
+				<%=devicelist%>
+                  </div>
+                </div>
+		  </div>
+      </div>
+    </div>
+  </div>
+</div> 
+<% include footer %>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://<%=server%>:<%=port%>');
+var test;
+
+  socket.on('device_update', function(data) {
+	var devices = data['devicelist']['devices'];
+	var list = $('<ul></ul>');
+	for(var device in devices) {
+		list.append('<li>'+devices[device]['name']+'<ul><li>'+devices[device]['ip']+'</li></ul></li>');
+		var eids = '';
+		for(var eid in devices[device]['eids']) {
+			eids = eids+devices[device]['eids'][eid]+' ';
+		}
+			var j = parseInt(device)+1
+			list.find("li:nth-child("+j+") ul").append('<li>'+eids+'</li>');
+	}
+	$('.devicelist').append(list);
+	});
+  window.onload = function() {
+	socket.emit('get_devices');
+}
+
+var $tabs = $('.tabbable li');
+$('#nexttab').on('click', function() {
+    $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+});
+</script>

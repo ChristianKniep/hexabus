@@ -1,0 +1,123 @@
+<% include header %>
+<div class="tab-content">
+  <div class="tab-pane active" id="wizard">
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="tabbable">
+            <ul class="nav nav-tabs"  data-tabs="tabs">
+              <li class="active"><a href="#connection" data-toggle="tab">Connection</a></li>
+              <li><a href="#activation" data-toggle="tab">Activation</a></li>
+              <li><a href="#devices" data-toggle="tab">Devices</a></li>
+            </ul>
+          </div>
+          <div class="tab-content">
+            <!--- Connection -->
+            <div class="tab-pane active" id="connection">
+              <h2 class="text-center">Connection</h2>
+			<div id="connection-loading">
+				Checking connection
+			</div>
+			<div id="connected" style="display:none">
+				<p>Connection established</p>
+				<a href="#activation" class="btn btn-success nexttab" data-toggle="tab">Next</a>
+			</div>
+			<div id="disconnected" style="display:none">
+						<p>No connection</p>
+						<a href="#" class="btn btn-success disabled">Next</a>
+			</div>
+            </div> <!--- Connection -->
+            <!--- Activation pane -->
+            <div class="tab-pane" id="activation">
+              <h2 class="text-center">Activation code</h2>
+			  <div id="activation-loading">
+			  Loading activation code
+			  </div>
+                <div id="activation-block" style="display:none">
+					Please go to <a href="https://www.mysmartgrid.de/device/mylist" target="_blank">https://www.mysmartgrid.de/device/mylist</a> and enter the activation code shown below.
+					<h3 id="activation-code"></h3>
+					<a href="#devices" class="btn btn-success nexttab" data-toggle="tab">Next</a>
+                </div>
+            </div> <!--- Activation pane -->
+            <!--- Devices pane -->
+            <div class="tab-pane" id="devices">
+              <h2 class="text-center">Devices</h2>
+                <ul class="devicelist" class="span9">
+                </ul>
+					<a class="btn btn-success submit devices">Submit</a>
+            </div> <!--- Devices pane -->
+		  </div>
+        </div> <!--- tab-content -->
+      </div>
+    </div>
+  </div>
+</div> 
+<% include footer %>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://<%=server%>:<%=port%>');
+  socket.on('connection_update', function(data) {
+	var is_connected = data['is_connected'];
+	if(is_connected) {
+		// hide loading and disconnected
+		$('#connection-loading').hide();
+		$('#disconnected').hide();
+		// show connected
+		$('#connected').show();
+	} else {
+		// hide loading and connected
+		$('#connection-loading').hide();
+		$('#connected').hide();
+		// show disconnected
+		$('#disconnected').show();
+	}
+	});
+  socket.on('activation_update', function(data) {
+	var activation = data['activation'];
+	$('#activation-code').text(activation);
+	// hide loading
+	$('#activation-loading').hide();
+	// show activation code
+	$('#activation-block').show();
+	});
+
+  socket.on('device_update', function(data) {
+	var devices = data['devicelist']['devices'];
+	var list = $('.devicelist');
+	for(var device in devices) {
+		list.append('<li><input class="devicename" value="'+devices[device]['name']+'" disabled><a class="btn btn-success edit devices">Edit</a><ul><li class="deviceip">'+devices[device]['ip']+'</input></li></ul></li>');
+		var eids = '';
+		for(var eid in devices[device]['eids']) {
+			eids = eids+devices[device]['eids'][eid]+' ';
+		}
+			var j = parseInt(device)+1
+			list.find("li:nth-child("+j+") ul").append('<li>'+eids+'</li>');
+	}
+	$('.edit.devices').on('click', function() {
+		$(this).prev().prop('disabled', false);
+		});
+	});
+  window.onload = function() {
+	socket.emit('check_connection');
+	socket.emit('get_activation');
+	socket.emit('get_devices');
+}
+
+var $tabs = $('.tabbable li');
+$('.nexttab').on('click', function() {
+    $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+});
+$('.submit.devices').on('click', function() {
+	var devicenames = $('.devicename');
+	var deviceips = $('.deviceip');
+	var devices = {};
+	for(var i=0;i<devicenames.length;i++) {
+		if($(devicenames[i]).is(':enabled')) {
+			devices[$(deviceips[i]).text()] = devicenames[i].value;
+		}
+	}
+	if(!$.isEmptyObject(devices)){
+		socket.emit('submit_devices', devices);
+	}
+});
+</script>
