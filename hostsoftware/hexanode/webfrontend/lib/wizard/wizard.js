@@ -45,7 +45,8 @@ var Wizard = function() {
 
 	this.get_devices = function(callback) {
 		// Get devices from external tool, e.g. hexinfo
-		exec('hexinfo -jd -', function(error, stdout, stderr){
+		exec('hexinfo -cj -d - -I usb0', function(error, stdout, stderr){
+		//exec('cat tools/devices.json', function(error, stdout, stderr){
 			if(error!==null) {
 				callback(JSON.parse("{}"));
 			} else {
@@ -55,13 +56,9 @@ var Wizard = function() {
 	}
 
 	this.get_status = function(req, res) {
-		require('dns').resolve('mysmartgrid.de', function(err) {
-			if (err)
-			connected=false;
-			else
-			connected=true;
-		var ip_addresses=get_ip_addresses();
-		res.render('status.ejs',
+		this.is_connected(function(connected) {
+			var ip_addresses=get_ip_addresses();
+			res.render('status.ejs',
 			{
 				"server": nconf.get('server'), 
 				"port": nconf.get('port'),
@@ -85,11 +82,12 @@ var Wizard = function() {
 
 	this.is_connected = function(callback) {
 		// TODO use heartbeat
-		require('dns').resolve('mysmartgrid.de', function(err) {
-			if (err)
-			is_connected=false;
-			else
-			is_connected=true;
+		require('dns').resolve('mysmartgrid.de', function(error) {
+			if(error) {
+				is_connected=false;
+			} else {
+				is_connected=true;
+			}
 
 			callback(is_connected);
 		});
@@ -107,7 +105,7 @@ var Wizard = function() {
 	}
 
 	this.submit_devices = function(devices) {
-		for(ip in devices) {
+		for(var ip in devices) {
 			var name=devices[ip];
 			ip = expand_ipv6_address(ip);
 			var fs = require('fs');

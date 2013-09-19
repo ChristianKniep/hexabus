@@ -24,13 +24,22 @@
                       <% } %>
 						</ul>
                       <% } %>
-                  </div>
-                <div class="devicelist">
-                  <div class="row-fluid">
-              <h3 class="text-center">Devices</h2>
-				<%=devicelist%>
-                  </div>
-                </div>
+                    </div>
+                    <div class="devices">
+                      <div class="row-fluid">
+                        <h3 class="text-center">Devices</h2>
+                          <div id="devices-loading">
+                            Scanning for devices. Please wait.
+                          </div>
+                          <div id="devices-block" style="display:none">
+                            <ul id="devicelist" class="span9">
+                            </ul>
+                          </div>
+                          <div id="nodevices-block" style="display:none">
+                            No devices found.
+                          </div>
+                        </div>
+                      </div>
 		  </div>
       </div>
     </div>
@@ -44,7 +53,7 @@ var test;
 
   socket.on('device_update', function(data) {
 	var devices = data['devicelist']['devices'];
-	var list = $('<ul></ul>');
+	var list = $('#devicelist');
 	for(var device in devices) {
 		list.append('<li>'+devices[device]['name']+'<ul><li>'+devices[device]['ip']+'</li></ul></li>');
 		var eids = '';
@@ -54,7 +63,12 @@ var test;
 			var j = parseInt(device)+1
 			list.find("li:nth-child("+j+") ul").append('<li>'+eids+'</li>');
 	}
-	$('.devicelist').append(list);
+  $('#devices-loading').hide();
+  if(devices!==undefined) {
+    $('#devices-block').show();
+  } else {
+    $('#nodevices-block').show();
+  }
 	});
   window.onload = function() {
 	socket.emit('get_devices');
