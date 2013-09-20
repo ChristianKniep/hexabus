@@ -24,7 +24,7 @@
 			</div>
 			<div id="disconnected" style="display:none">
 						<p>No connection</p>
-						<a href="#" class="btn btn-success disabled">Next</a>
+						<a href="#" class="btn disabled">Next</a>
 			</div>
             </div> <!--- Connection -->
             <!--- Activation pane -->
@@ -46,8 +46,8 @@
               	Scanning for devices. Please wait.
               </div>
               <div id="devices-block" style="display:none">
-              	<ul class="devicelist" class="span9">
-              	</ul>
+              	<div class="devicelist" class="span9">
+              	</div>
               	<a id="devices-submit" class="btn btn-success submit devices" style="display:none">Submit</a>
               </div>
               <div id="nodevices-block" style="display:none">
@@ -94,13 +94,10 @@
 	console.log(devices)
 	var list = $('.devicelist');
 	for(var device in devices) {
-		list.append('<li><input class="devicename" value="'+devices[device]['name']+'" disabled><a class="btn btn-success edit devices">Edit</a><ul><li class="deviceip">'+devices[device]['ip']+'</input></li></ul></li>');
-		var eids = '';
-		for(var eid in devices[device]['eids']) {
-			eids = eids+devices[device]['eids'][eid]+' ';
-		}
-			var j = parseInt(device)+1
-			list.find("li:nth-child("+j+") ul").append('<li>'+eids+'</li>');
+		list.append('<div class="input-append"><input class="devicename" value="'+devices[device]['name']+' " type="text" disabled></input><button class="btn edit devices">Edit</button></div><ul><li class="deviceip">'+devices[device]['ip']+'</li></ul>');
+		var eids = devices[device]['eids'].join(", ");
+			var j = parseInt(device)
+			$(list.find(".deviceip")[j]).append('<li>'+eids+'</li>');
 	}
 	$('.edit.devices').on('click', function() {
 		$(this).prev().prop('disabled', false);
