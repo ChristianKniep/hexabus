@@ -1,64 +1,54 @@
 <% include header %>
-<div class="tab-content">
-  <div class="tab-pane active" id="wizard">
-    <div class="container">
-      <div class="row-fluid">
-        <div class="span12">
-          <div class="tabbable">
-            <ul class="nav nav-tabs"  data-tabs="tabs">
-              <li class="active"><a href="#connection" data-toggle="tab">Connection</a></li>
-              <li><a href="#activation" data-toggle="tab">Activation</a></li>
-              <li><a href="#devices" data-toggle="tab">Devices</a></li>
-            </ul>
-          </div>
-          <div class="tab-content">
+    <div class="container" style="position:relative;min-height: 100%;height: 100%;">
+			<!--- Start -->
+			<div id="start" class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em">
+				<p class="lead" data-localize="start-message">Cannot link to mySmartGrid. Do you want to configure your device?</p>
+				<button id="start-button" class="btn btn-success" data-localize="start-button">Start configuration</button>
+			</div>
             <!--- Connection -->
-            <div class="tab-pane active" id="connection">
-              <h2 class="text-center">Connection</h2>
-			<div id="connection-loading">
-				Checking connection
+			<div id="connection"  class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
+				<p class="lead" data-localize="connection-message1">Welcome.</p>
+				<p class="lead" data-localize="connection-message2">We now try to create a network configuration that is suitable to your configuration.</p>
+				<p class="lead" data-localize="connection-message3">We also check whether mysmartgrid.de is reachable.</p>
+				<div id="connection-loading">
+					<p class="lead"><img src="img/Loading.gif"/> Checking connection</p>
+				</div>
+				<div id="connected" style="display:none">
+					<p class="lead">✔ Success</p>
+					<p class="lead">You can now activate your device</p>
+					<button id="start-activation" class="btn btn-success">Activate device</button>
+				</div>
+				<div id="disconnected" style="display:none">
+					<p class="lead">No connection</p>
+				</div>
 			</div>
-			<div id="connected" style="display:none">
-				<p>Connection established</p>
-				<a href="#activation" class="btn btn-success nexttab" data-toggle="tab">Next</a>
-			</div>
-			<div id="disconnected" style="display:none">
-						<p>No connection</p>
-						<a href="#" class="btn disabled">Next</a>
-			</div>
-            </div> <!--- Connection -->
+            <!--- Connection -->
             <!--- Activation pane -->
-            <div class="tab-pane" id="activation">
-              <h2 class="text-center">Activation code</h2>
-			  <div id="activation-loading">
+			<div id="activation"  class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
+				<p class="lead" data-localize="activation-message1">We now need to link this device with your account on mySmartGrid.</p>
+				<p class="lead" data-localize="activation-message2">If you don't have an account yet, please create one first:</p>
+				<a href="https://www.mysmartgrid.de/user/register" class="btn" target="_blank">Create mSG Account</a>
+			  <div id="activation-loading" class="page" style="display:none">
 			  Loading activation code
 			  </div>
-                <div id="activation-block" style="display:none">
-					Please go to <a href="https://www.mysmartgrid.de/device/mylist" target="_blank">https://www.mysmartgrid.de/device/mylist</a> and enter the activation code shown below.
-					<h3 id="activation-code"></h3>
-					<a href="#devices" class="btn btn-success nexttab" data-toggle="tab">Next</a>
+                <div id="activation-block" class="page" style="display:none">
+					<br />
+					<p class="lead" data-localize="activation-message3">Then, please enter the code</p>
+					<p class="lead" id="activation-code"></p>
+					<p class="lead" data-localize="activation-message4">on the mySmartGrid page to link the device to your account.</p>
+					<a id="link-account" href="https://www.mysmartgrid.de/device/mylist" target="_blank" class="btn btn-success">Link account</a>
+					<button id="finish-wizard" class="btn btn-success" style="display:none">Continue</button>
                 </div>
-            </div> <!--- Activation pane -->
-            <!--- Devices pane -->
-            <div class="tab-pane" id="devices">
-              <h2 class="text-center">Devices</h2>
-              <div id="devices-loading">
-              	Scanning for devices. Please wait.
-              </div>
-              <div id="devices-block" style="display:none">
-              	<div class="devicelist" class="span9">
-              	</div>
-              	<a id="devices-submit" class="btn btn-success submit devices" style="display:none">Submit</a>
-              </div>
-              <div id="nodevices-block" style="display:none">
-              	No devices found.
-              </div>
-            </div> <!--- Devices pane -->
-		  </div>
-        </div> <!--- tab-content -->
-      </div>
-    </div>
-  </div>
+			</div>
+            <!--- Activation pane -->
+            <!--- Success pane -->
+			<div id="success" class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
+				<h3 style="text-decoration: underline">Success</h3>
+				<p class="lead" data-localize="success-message1">Your device is now connected to mySmartGrid.</p>
+				<p class="lead" data-localize="success-message2">Next step: Please link your Hexabus devices with the base station.</p>
+				<a id="link-devices" href="config#network" class="btn btn-success">Link devices</a>
+            </div>
+            <!--- Success pane -->
 </div> 
 <% include footer %>
 <script src="/socket.io/socket.io.js"></script>
@@ -68,14 +58,12 @@
 	var is_connected = data['is_connected'];
 	if(is_connected) {
 		// hide loading and disconnected
-		$('#connection-loading').hide();
-		$('#disconnected').hide();
+		$('#connection-loading,#disconnected').hide();
 		// show connected
 		$('#connected').show();
 	} else {
 		// hide loading and connected
-		$('#connection-loading').hide();
-		$('#connected').hide();
+		$('#connection-loading,#connected').hide();
 		// show disconnected
 		$('#disconnected').show();
 	}
@@ -103,7 +91,7 @@
 		$(this).prev().prop('disabled', false);
 		$('#devices-submit').show();
 	});
-	$('#devices-loading').hide();
+	$('.page').hide();
 	if(devices!==undefined) {
 		$('#devices-block').show();
 	} else {
@@ -111,15 +99,29 @@
 	}
 });
   window.onload = function() {
-	socket.emit('check_connection');
-	socket.emit('get_activation');
-	socket.emit('get_devices');
+	//socket.emit('check_connection');
+	//socket.emit('get_activation');
+	//socket.emit('get_devices');
 }
 
-var $tabs = $('.tabbable li');
-$('.nexttab').on('click', function() {
-    $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
-});
+	$('#start-button').on('click', function() {
+		$('.page').not('#connection').hide();
+		$('#connection').show();
+		socket.emit('check_connection');
+	});
+	$('#start-activation').on('click', function() {
+		$('.page').not('#activation').hide();
+		$('#activation').show();
+		socket.emit('get_activation');
+	});
+	$('#link-account').on('click', function() {
+		$('#link-account').removeClass('btn-success');
+		$('#finish-wizard').show();
+	});
+	$('#finish-wizard').on('click', function() {
+		$('.page').not('#success').hide();
+		$('#success').show();
+	});
 $('.submit.devices').on('click', function() {
 	var devicenames = $('.devicename');
 	var deviceips = $('.deviceip');
