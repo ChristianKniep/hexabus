@@ -8,18 +8,21 @@
             <!--- Connection -->
 			<div id="connection"  class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
 				<p class="lead" data-localize="connection-message1">Welcome.</p>
-				<p class="lead" data-localize="connection-message2">We now try to create a network configuration that is suitable to your configuration.</p>
+				<p class="lead" data-localize="connection-message2">We now try to create a suitable network configuration.</p>
 				<p class="lead" data-localize="connection-message3">We also check whether mysmartgrid.de is reachable.</p>
-				<div id="connection-loading">
+				<div id="connection-start">
+					<button id="configure-network" class="btn btn-success" data-localize="configure-network">Configure network</button>
+				</div>
+				<div id="connection-loading" style="display:none">
 					<p class="lead"><img src="img/Loading.gif"/> Checking connection</p>
 				</div>
 				<div id="connected" style="display:none">
-					<p class="lead">✔ Success</p>
+					<p class="lead text-success">✔ Success</p>
 					<p class="lead">You can now activate your device</p>
 					<button id="start-activation" class="btn btn-success">Activate device</button>
 				</div>
 				<div id="disconnected" style="display:none">
-					<p class="lead">No connection</p>
+					<p class="lead text-error">Unable to configure network.</p>
 				</div>
 			</div>
             <!--- Connection -->
@@ -43,10 +46,11 @@
             <!--- Activation pane -->
             <!--- Success pane -->
 			<div id="success" class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
-				<h3 style="text-decoration: underline">Success</h3>
+				<h3 class="text-success" style="text-decoration: underline">Success</h3>
 				<p class="lead" data-localize="success-message1">Your device is now connected to mySmartGrid.</p>
-				<p class="lead" data-localize="success-message2">Next step: Please link your Hexabus devices with the base station.</p>
-				<a id="link-devices" href="config#network" class="btn btn-success">Link devices</a>
+				<!--- <p class="lead" data-localize="success-message2">Next step: Please link your Hexabus devices with the base station.</p>
+				<a id="link-devices" href="config#network" class="btn btn-success">Link devices</a> -->
+				<a id="dashboard-button" href="/" class="btn btn-success" data-localize="dasboard-button">Continue to dashboard</a>
             </div>
             <!--- Success pane -->
 </div> 
@@ -107,6 +111,10 @@
 	$('#start-button').on('click', function() {
 		$('.page').not('#connection').hide();
 		$('#connection').show();
+	});
+	$('#configure-network').on('click', function() {
+		$('#connection-start').hide();
+		$('connection-loading').show();
 		socket.emit('check_connection');
 	});
 	$('#start-activation').on('click', function() {

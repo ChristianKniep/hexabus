@@ -81,15 +81,20 @@ var Wizard = function() {
 	}
 
 	this.is_connected = function(callback) {
-		// TODO use heartbeat
-		require('dns').resolve('mysmartgrid.de', function(error) {
-			if(error) {
-				is_connected=false;
+		exec('sudo hxb-net-autoconf', function(error, stdout, stderr) {
+			if(error !== null) {
+				callback(false);
 			} else {
-				is_connected=true;
+				// TODO use heartbeat
+				require('dns').resolve('mysmartgrid.de', function(error) {
+					if(error) {
+						is_connected=false;
+					} else {
+						is_connected=true;
+					}
+				callback(stdout);
+			});
 			}
-
-			callback(is_connected);
 		});
 	}
 
