@@ -1,0 +1,56 @@
+{
+	"navbar": {
+		"console": "Hexabus Basisstation",
+		"main": "Übersicht",
+		"configuration": "Konfiguration",
+		"about": "Über Hexabus"
+	},
+
+	"dashboard": {
+		"dashboard": "Alle Sensoren",
+		"last-update": {
+			"label": "Letztes Update:",
+			"now": "jetzt",
+			"seconds-ago": "vor {ago} Sekunden",
+			"minutes-ago": "vor {ago} Minuten"
+		}
+	},
+
+	"rename-error": {
+		"template": "Konnte Gerät nicht umbenennen: {reason}",
+		"timeout": "Kommunikation mit dem Gerät nicht möglich"
+	},
+
+	"wizard": {
+		"continue": "Fortfahren",
+		"success": "Erfolgreich",
+		"start": {
+			"message": "Konnte nicht mit mySmartGrid verbinden. Möchten Sie ihr Gerät einrichten?",
+			"button": "Einrichtung beginnen"
+		},
+		"connection": {
+			"message1": "Willkommen.",
+			"message2": "Wir werden nun versuchen eine passende Netzwerkkonfiguration zu erstellen.",
+			"message3": "Außerdem werden wir überprüfen, ob mysmartgrid.de erreichbar ist.",
+			"configure": "Netzwerk einrichten",
+			"loading": "Netzwerk wird eingerichtet...",
+			"connected": "Sie können jetzt ihr Gerät aktivieren.",
+			"activate": "Gerät aktivieren",
+			"disconnected": "Netzwerkkonfiguration fehlgeschlagen."
+		},
+		"activation": {
+			"message1": "Wir müssen nun ihr Gerät mit ihrem mySmartGrid-Konto verknüpfen.",
+			"message2": "Wenn Sie noch kein Konto besitzen, legen Sie bitte zunächst eins an",
+			"register": "mSG-Konto anlegen",
+			"loading": "Aktivierungscode wird geladen...",
+			"error": "Aktivierungscode konnte nicht erstellt werden.",
+			"message3": "Dann geben Sie bitte den folgenden Code",
+			"message4": "auf der mySmartGrid-Seite ein um ihr Gerät mit ihrem Konto zu verknüpfen.",
+			"link": "Konto verknüpfen"
+		},
+		"end": {
+			"message1": "Ihr Gerät ist jetzt mit mySmartGrid verbunden.",
+			"dashboard": "Weiter zur Übersicht"
+		}
+	}
+}

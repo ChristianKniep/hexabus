@@ -2,55 +2,59 @@
     <div class="container" style="position:relative;min-height: 100%;height: 100%;">
 			<!--- Start -->
 			<div id="start" class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em">
-				<p class="lead" data-localize="start-message">Cannot link to mySmartGrid. Do you want to configure your device?</p>
-				<button id="start-button" class="btn btn-success" data-localize="start-button">Start configuration</button>
+				<p class="lead" data-localize="wizard.start.message">Cannot link to mySmartGrid. Do you want to configure your device?</p>
+				<button id="start-button" class="btn btn-success" data-localize="wizard.start.button">Start configuration</button>
 			</div>
             <!--- Connection -->
 			<div id="connection"  class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
-				<p class="lead" data-localize="connection-message1">Welcome.</p>
-				<p class="lead" data-localize="connection-message2">We now try to create a suitable network configuration.</p>
-				<p class="lead" data-localize="connection-message3">We also check whether mysmartgrid.de is reachable.</p>
+				<p class="lead" data-localize="wizard.connection.message1">Welcome.</p>
+				<p class="lead" data-localize="wizard.connection.message2">We now try to create a suitable network configuration.</p>
+				<p class="lead" data-localize="wizard.connection.message3">We also check whether mysmartgrid.de is reachable.</p>
 				<div id="connection-start">
-					<button id="configure-network" class="btn btn-success" data-localize="configure-network">Configure network</button>
+					<button id="configure-network" class="btn btn-success" data-localize="connection.configure">Configure network</button>
 				</div>
 				<div id="connection-loading" style="display:none">
-					<p class="lead"><img src="img/Loading.gif"/> Checking connection</p>
+					<p class="lead" data-localize="wizard.connection.loading"><img src="img/Loading.gif"/> Configuring network...</p>
 				</div>
 				<div id="connected" style="display:none">
-					<p class="lead text-success">✔ Success</p>
-					<p class="lead">You can now activate your device</p>
-					<button id="start-activation" class="btn btn-success">Activate device</button>
+					<p class="lead text-success">✔ <span data-localize="wizard.success">Success</span></p>
+					<p class="lead" data-localize="wizard.connection.connected">You can now activate your device.</p>
+					<button id="start-activation" class="btn btn-success" data-localize="wizard.connection.activate">Activate device</button>
 				</div>
 				<div id="disconnected" style="display:none">
-					<p class="lead text-error">Unable to configure network.</p>
+					<p class="lead text-error" data-localize="wizard.connection.disconnected">Unable to configure network.</p>
 				</div>
 			</div>
             <!--- Connection -->
             <!--- Activation pane -->
 			<div id="activation"  class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
-				<p class="lead" data-localize="activation-message1">We now need to link this device with your account on mySmartGrid.</p>
-				<p class="lead" data-localize="activation-message2">If you don't have an account yet, please create one first:</p>
-				<a href="https://www.mysmartgrid.de/user/register" class="btn" target="_blank">Create mSG Account</a>
+				<p class="lead" data-localize="wizard.activation.message1">We now need to link this device with your account on mySmartGrid.</p>
+				<p class="lead" data-localize="wizard.activation.message2">If you don't have an account yet, please create one first:</p>
+				<a href="https://www.mysmartgrid.de/user/register" class="btn" target="_blank" data-localize="wizard.activation.register">Create mSG Account</a>
 			  <div id="activation-loading" class="page" style="display:none">
-			  Loading activation code
+					<p class="lead" data-localize="wizard.activation.loading"><img src="img/Loading.gif"/> Loading activation code...</p>
 			  </div>
+				<div id="activation-error" style="display:none">
+					<br />
+					<p class="lead text-error" data-localize="wizard.activation.error">Activation code could not be generated.</p>
+				</div>
                 <div id="activation-block" class="page" style="display:none">
 					<br />
-					<p class="lead" data-localize="activation-message3">Then, please enter the code</p>
-					<p class="lead" id="activation-code"></p>
-					<p class="lead" data-localize="activation-message4">on the mySmartGrid page to link the device to your account.</p>
-					<a id="link-account" href="https://www.mysmartgrid.de/device/mylist" target="_blank" class="btn btn-success">Link account</a>
-					<button id="finish-wizard" class="btn btn-success" style="display:none">Continue</button>
+					<p class="lead" data-localize="wizard.activation.message3">Then, please enter the code</p>
+					<p class="lead"><strong id="activation-code"></strong></p>
+					<p class="lead" data-localize="wizard.activation.message4">on the mySmartGrid page to link the device to your account.</p>
+					<a id="link-account" href="https://www.mysmartgrid.de/device/mylist" target="_blank" class="btn btn-success" data-localize="wizard.activation.link">Link account</a>
+					<button id="finish-wizard" class="btn btn-success" style="display:none" data-localize="wizard.continue">Continue</button>
                 </div>
 			</div>
             <!--- Activation pane -->
             <!--- Success pane -->
 			<div id="success" class="page text-center" style="position:absolute; top:40%; width:100%;height:10em; margin-top:-5em; display:none">
-				<h3 class="text-success" style="text-decoration: underline">Success</h3>
-				<p class="lead" data-localize="success-message1">Your device is now connected to mySmartGrid.</p>
-				<!--- <p class="lead" data-localize="success-message2">Next step: Please link your Hexabus devices with the base station.</p>
-				<a id="link-devices" href="config#network" class="btn btn-success">Link devices</a> -->
-				<a id="dashboard-button" href="/" class="btn btn-success" data-localize="dasboard-button">Continue to dashboard</a>
+				<h3 class="text-success" style="text-decoration: underline" data-localize="wizard.success">Success</h3>
+				<p class="lead" data-localize="wizard.end.message1">Your device is now connected to mySmartGrid.</p>
+				<!--- <p class="lead" data-localize="wizard.end.message2">Next step: Please link your Hexabus devices with the base station.</p>
+				<a id="link-devices" href="config#network" class="btn btn-success" data-localize="wizard.end.link">Link devices</a> -->
+				<a id="dashboard-button" href="/" class="btn btn-success" data-localize="wizard.end.dashboard">Continue to dashboard</a>
             </div>
             <!--- Success pane -->
 </div> 
@@ -74,12 +78,16 @@
 	});
   socket.on('activation_update', function(data) {
 	var activation = data['activation'];
-	$('#activation-code').text(activation);
 	// hide loading
 	$('#activation-loading').hide();
-	// show activation code
-	$('#activation-block').show();
-	});
+	if(activation !== "") {
+		$('#activation-code').text(activation);
+		// show activation code
+		$('#activation-block').show();
+	} else {
+		$('#activation-error').show();
+	}
+  });
 
   socket.on('device_update', function(data) {
 	var devices = data['devicelist']['devices'];

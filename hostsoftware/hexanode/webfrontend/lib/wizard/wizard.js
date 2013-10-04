@@ -81,7 +81,8 @@ var Wizard = function() {
 	}
 
 	this.is_connected = function(callback) {
-		exec('sudo hxb-net-autoconf', function(error, stdout, stderr) {
+		//exec('sudo hxb-net-autoconf', function(error, stdout, stderr) {
+		exec('ls', function(error, stdout, stderr) {
 			if(error !== null) {
 				callback(false);
 			} else {
@@ -99,10 +100,10 @@ var Wizard = function() {
 	}
 
 	this.get_activation = function(callback) {
-		// execute hexabus_msg_bridge -A
+		// get activation code
 		exec('hexabus_msg_bridge -A', function(error, stdout, stderr) {
 			if(error !== null) {
-				callback("Activation code could not be generated");
+				callback("");
 			} else {
 				callback(stdout);
 			}
